@@ -10,21 +10,18 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.CustomModelDataComponent;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
 import wynntools.wynntools.mixin.client.GameRendererMixin;
 
 import java.awt.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class OuterVoidItemDetection implements ClientModInitializer {
 
     // Track seen item entity UUIDs to avoid duplicate logging
-    private static final Set<ItemEntity> seenItems = new HashSet<>();
+    private static final Map<UUID, ItemEntity> seenItems = new HashMap<>();
     private static final Set<ItemEntity> unknownItems = new HashSet<>();
 
     @Override
@@ -37,22 +34,24 @@ public class OuterVoidItemDetection implements ClientModInitializer {
         if (client.world == null) return;
         if (MinecraftClient.getInstance().player == null) return;
 
-        seenItems.clear(); //TODO cache items and detect if there not there anymore
+        Map<UUID, ItemEntity> nearbyItems = new HashMap<>();
+
         PlayerEntity player = MinecraftClient.getInstance().player;
 
         //check if player coords are in outer void
         if (!isInOuterVoid(player.getX(), player.getZ())) return;
 
 
-        double range = 300;
+        double range = 64;
         Box box = player.getBoundingBox().expand(range);
         for (ItemEntity itemEntity : client.world.getEntitiesByClass(ItemEntity.class, box, item -> true)) {
-            if (seenItems.contains(itemEntity)){
+            nearbyItems.put(itemEntity.getUuid(), itemEntity);
+            if (seenItems.containsKey(itemEntity.getUuid())){
                 continue;
             }
 
             // New item detected!
-            seenItems.add(itemEntity);
+            seenItems.put(itemEntity.getUuid(), itemEntity);
 
             Utils.Rarities rarity = OuterVoidItemDatabase.getRarity(itemEntity);
             if (rarity == Utils.Rarities.UNKNOWN) {
@@ -64,6 +63,26 @@ public class OuterVoidItemDetection implements ClientModInitializer {
                     System.out.println("durability: " + itemEntity.getStack().getDamage());
                 }
             }
+        }
+
+        Set<UUID> toRemove = new HashSet<>();
+
+        Box box2 = player.getBoundingBox().expand(45);
+        // loop through all cached items
+        for (Map.Entry<UUID, ItemEntity> entry : seenItems.entrySet()) {
+            UUID id = entry.getKey();
+            ItemEntity item = entry.getValue();
+            // if the item is close enough to the player to be gotten from the server
+            if (box2.contains(item.getPos())){
+                // if the item is not gotten from the server
+                if (!nearbyItems.containsKey(id)){
+                    toRemove.add(id);
+                }
+            }
+        }
+
+        for (UUID id : toRemove){
+            seenItems.remove(id);
         }
     }
 
@@ -84,6 +103,7 @@ public class OuterVoidItemDetection implements ClientModInitializer {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client == null) return;
         if (client.player == null) return;
+        if (!isInOuterVoid(client.player.getX(), client.player.getZ())) return;
 
         Camera camera = client.gameRenderer.getCamera();
         GameRenderer renderer = client.gameRenderer;
@@ -101,8 +121,24 @@ public class OuterVoidItemDetection implements ClientModInitializer {
         // Get camera angles in radians
         float yaw = (float)Math.toRadians(camera.getYaw());
         float pitch = (float)Math.toRadians(-camera.getPitch());
-        for (ItemEntity item : seenItems) {
+        for (Map.Entry<UUID, ItemEntity> entry : seenItems.entrySet()) {
+            ItemEntity item = entry.getValue();
             Vec3d itemPos = item.getPos();
+
+            //item detection
+            String name = item.getStack().getName().getString();
+            CustomModelDataComponent modelData = item.getStack().get(DataComponentTypes.CUSTOM_MODEL_DATA);
+            float ID;
+            if (modelData != null) {
+                ID = modelData.floats().getFirst();
+            } else ID = -1;
+            if (Objects.equals(name, "Diamond Axe")){
+                ID = item.getStack().getDamage();
+            }
+            Utils.Rarities rarity = OuterVoidItemDatabase.getRarity(name, ID);
+            Color color = OuterVoidItemDatabase.getColor(rarity);
+
+            if (rarity.ordinal() < Config.getLowest_rarity_To_Show().ordinal()) return;
 
             // Calculate relative position to camera
             double dx = itemPos.x - cameraPos.x;
@@ -128,20 +164,6 @@ public class OuterVoidItemDetection implements ClientModInitializer {
             double scale = Math.min(screenWidth, screenHeight) / (2.0 * Math.tan(Math.toRadians(FOV) / 2));
             double screenX = (x / z) * scale + screenWidth / 2;
             double screenY = (-y / z) * scale + screenHeight / 2;
-
-
-            //item detection
-            String name = item.getStack().getName().getString();
-            CustomModelDataComponent modelData = item.getStack().get(DataComponentTypes.CUSTOM_MODEL_DATA);
-            float ID;
-            if (modelData != null) {
-                ID = modelData.floats().getFirst();
-            } else ID = -1;
-            if (Objects.equals(name, "Diamond Axe")){
-                ID = item.getStack().getDamage();
-            }
-            Utils.Rarities rarity = OuterVoidItemDatabase.getRarity(name, ID);
-            Color color = OuterVoidItemDatabase.getColor(rarity);
 
             int minSize = 4;
             int edgeSize = minSize * 3;

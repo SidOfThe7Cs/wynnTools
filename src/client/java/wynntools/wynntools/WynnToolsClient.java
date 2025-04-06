@@ -8,11 +8,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-
-import java.awt.*;
 
 public class WynnToolsClient implements ClientModInitializer {
 
@@ -59,6 +56,20 @@ public class WynnToolsClient implements ClientModInitializer {
 						Utils.Rarities.UNIQUE,
 						Config::getShow_Lines_Above_Rarity,
 						Config::setShow_Lines_Above_Rarity
+				)
+				.controller(optionC -> EnumControllerBuilder.create(optionC)
+						.enumClass(Utils.Rarities.class)
+				)
+				.build();
+		ConfigScreen.addOption(ConfigScreen.Categories.OUTER_VOID, option);
+
+		option = Option.<Utils.Rarities>createBuilder()
+				.name(Text.of("Show items at rarity"))
+				.description(OptionDescription.of(Text.of("at what rarity should item be shown")))
+				.binding(
+						Utils.Rarities.UNIQUE,
+						Config::getLowest_rarity_To_Show,
+						Config::setLowest_rarity_To_Show
 				)
 				.controller(optionC -> EnumControllerBuilder.create(optionC)
 						.enumClass(Utils.Rarities.class)

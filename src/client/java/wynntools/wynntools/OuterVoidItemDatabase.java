@@ -164,7 +164,7 @@ public class OuterVoidItemDatabase {
         Pair Fossilized_Starfish2 = new Pair("Diamond Axe", 28.0F);
         itemRarityMap.put(Fossilized_Starfish2, Utils.Rarities.UNIQUE);
 
-        Pair Almanac_Page2 = new Pair("Diamond Axe", 0F);
+        Pair Almanac_Page2 = new Pair("Diamond Axe", .0F); // still need dura here
         itemRarityMap.put(Almanac_Page2, Utils.Rarities.RARE);
 
         Pair Elestial_Voidstone2 = new Pair("Diamond Axe", 66.0F);
@@ -204,14 +204,6 @@ public class OuterVoidItemDatabase {
             ID = item.getStack().getDamage();
         }
         return getRarity(name, ID);
-    }
-
-    public static Utils.Rarities getRarity(String name) {
-        Pair item = new Pair(name, -1.0F);
-        if (itemRarityMap.containsKey(item)) {
-            return itemRarityMap.get(item);
-        }
-        return Utils.Rarities.UNKNOWN;
     }
 
     public static Color getColor(Utils.Rarities rarity) {

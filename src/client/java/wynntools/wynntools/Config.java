@@ -15,6 +15,7 @@ public class Config {
     private static Utils.Rarities Metal_Swarf_Color = Utils.Rarities.UNIQUE;
     private static Utils.Rarities Show_Lines_Above_Rarity = Utils.Rarities.UNIQUE;
     private static boolean Outer_Void_Item_Helper_Main_Toggle = true;
+    private static Utils.Rarities Lowest_rarity_To_Show = Utils.Rarities.UNIQUE;
 
     private static final Path CONFIG_PATH = Paths.get("config", "wynntoolsconfig.json");
 
@@ -27,6 +28,7 @@ public class Config {
         json.put("Metal_Swarf_Color", getMetal_Swarf_Color());
         json.put("Show_Lines_Above_Rarity", getShow_Lines_Above_Rarity());
         json.put("Outer_Void_Item_Helper_Main_Toggle", isOuter_Void_Item_Helper_Main_Toggle());
+        json.put("Lowest_rarity_To_Show", getLowest_rarity_To_Show());
 
 
         JSONArray elementsArray = new JSONArray();
@@ -71,6 +73,14 @@ public class Config {
                 } catch (IllegalArgumentException e) {
                     System.err.println("Invalid Show_Lines_Above_Rarity value: " + Show_Lines_Above_Rarity + ". Using default value.");
                     setShow_Lines_Above_Rarity(Utils.Rarities.UNIQUE);
+                }
+
+                String Lowest_rarity_To_Show = obj.optString("Lowest_rarity_To_Show", "UNIQUE");
+                try {
+                    setLowest_rarity_To_Show(Utils.Rarities.valueOf(Lowest_rarity_To_Show));
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Invalid Lowest_rarity_To_Show value: " + Lowest_rarity_To_Show + ". Using default value.");
+                    setLowest_rarity_To_Show(Utils.Rarities.UNIQUE);
                 }
 
                 JSONArray elementsArray = obj.getJSONArray("hudElements");
@@ -133,5 +143,13 @@ public class Config {
 
     public static void setOuter_Void_Item_Helper_Main_Toggle(boolean outer_Void_Item_Helper_Main_Toggle) {
         Outer_Void_Item_Helper_Main_Toggle = outer_Void_Item_Helper_Main_Toggle;
+    }
+
+    public static Utils.Rarities getLowest_rarity_To_Show() {
+        return Lowest_rarity_To_Show;
+    }
+
+    public static void setLowest_rarity_To_Show(Utils.Rarities lowest_rarity_To_Show) {
+        Lowest_rarity_To_Show = lowest_rarity_To_Show;
     }
 }
