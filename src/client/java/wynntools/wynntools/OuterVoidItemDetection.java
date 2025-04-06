@@ -1,6 +1,7 @@
 package wynntools.wynntools;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.datafixers.types.Type;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.ShaderProgramKeys;
@@ -138,7 +139,7 @@ public class OuterVoidItemDetection implements ClientModInitializer {
             Utils.Rarities rarity = OuterVoidItemDatabase.getRarity(name, ID);
             Color color = OuterVoidItemDatabase.getColor(rarity);
 
-            if (rarity.ordinal() < Config.getLowest_rarity_To_Show().ordinal()) return;
+            if (rarity.ordinal() < Config.getLowest_rarity_To_Show().ordinal()) continue;
 
             // Calculate relative position to camera
             double dx = itemPos.x - cameraPos.x;
