@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "wynntools",
+	"version": "${version}",
+	"name": "wynnTools",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"SidOfThe7Cs"
+	],
+	"contact": {
+		"homepage": "none",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/wynntools/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"wynntools.wynntools.WynnToolsClient"
+		],
+		"modmenu": [
+			"wynntools.wynntools.ModMenuIntegration"
+		]
+	},
+	"mixins": [
+		{
+			"config": "wynntools.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.12",
+		"minecraft": "~1.21.4",
+		"java": ">=21",
+		"fabric-api": "*",
+		"yet_another_config_lib_v3": ">=3.5.0+1.21"
+	},
+	"suggests": {
+	}
+}
