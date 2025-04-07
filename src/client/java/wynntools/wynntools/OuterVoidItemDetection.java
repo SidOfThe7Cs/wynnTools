@@ -122,10 +122,10 @@ public class OuterVoidItemDetection {
         float pitch = (float)Math.toRadians(-camera.getPitch());
 
         // sort items
-        List<Map.Entry<UUID, ItemEntity>> prioritizedItems = seenItems.entrySet().stream()
+        List<Map.Entry<UUID, ItemEntity>> sortedItems = seenItems.entrySet().stream()
                 .filter(entry -> {
                     Utils.Rarities rarity = OuterVoidItemDatabase.getRarity(entry.getValue());
-                    return rarity != null && rarity.ordinal() >= Config.getOuter_Void_Show_Lines_Above_Rarity().ordinal();
+                    return rarity != null && rarity.ordinal() >= Config.getOuter_Void_Lowest_Rarity_To_Show().ordinal();
                 })
                 .sorted((a, b) -> {
                     Utils.Rarities rarityA = OuterVoidItemDatabase.getRarity(a.getValue());
@@ -142,7 +142,7 @@ public class OuterVoidItemDetection {
                 .toList();
 
         int lineCount = 0;
-        for (Map.Entry<UUID, ItemEntity> entry : prioritizedItems) {
+        for (Map.Entry<UUID, ItemEntity> entry : sortedItems) {
             ItemEntity item = entry.getValue();
             Vec3d itemPos = item.getPos();
             if (!itemPos.isInRange(client.player.getPos(), Config.getOuter_Void_Item_Helper_Range())) continue;
@@ -214,30 +214,38 @@ public class OuterVoidItemDetection {
 
 
             //draw line to items
-            if (rarity.ordinal() > Config.getOuter_Void_Show_Lines_Above_Rarity().ordinal()) {
-                if (lineCount >= Config.getOuter_Void_Max_Lines_To_Draw()) continue;
-                lineCount++;
-                // Get the transformation matrix from the matrix stack, alongside the tessellator instance and a new buffer builder.
-                Matrix4f transformationMatrix = context.getMatrices().peek().getPositionMatrix();
-                Tessellator tessellator = Tessellator.getInstance();
+            if (rarity.ordinal() >= Config.getOuter_Void_Show_Lines_At_Rarity().ordinal()) {
+                if (lineCount < Config.getOuter_Void_Max_Lines_To_Draw()) {
+                    if (Config.isOuter_Void_Next_Item_Unique_Color() && lineCount == 0)
+                        color = Config.getOuter_Void_Next_Item_Color();
+                    try {
+                        // Get the transformation matrix from the matrix stack, alongside the tessellator instance and a new buffer builder.
+                        Matrix4f transformationMatrix = context.getMatrices().peek().getPositionMatrix();
+                        Tessellator tessellator = Tessellator.getInstance();
 
-                RenderSystem.disableCull();
+                        RenderSystem.disableCull();
 
-                // Begin a triangle strip buffer using the POSITION_COLOR vertex format.
-                BufferBuilder buffer = tessellator.begin(VertexFormat.DrawMode.TRIANGLES, VertexFormats.POSITION_COLOR);
+                        // Begin a triangle strip buffer using the POSITION_COLOR vertex format.
+                        BufferBuilder buffer = tessellator.begin(VertexFormat.DrawMode.TRIANGLES, VertexFormats.POSITION_COLOR);
 
-                // Write our vertices, Z doesn't really matter since it's on the HUD.
-                buffer.vertex(transformationMatrix, (float) screenX - (float) size / 2, (float) screenY - (float) size / 2, 5).color(color.getRGB());
-                buffer.vertex(transformationMatrix, (float) screenWidth / 2, (float) screenHeight / 2, 5).color(color.getRGB());
-                buffer.vertex(transformationMatrix, (float) screenX + (float) size / 2, (float) screenY + (float) size / 2, 5).color(color.getRGB());
+                        // Write our vertices, Z doesn't really matter since it's on the HUD.
+                        buffer.vertex(transformationMatrix, (float) screenX - (float) size / 2, (float) screenY - (float) size / 2, 5).color(color.getRGB());
+                        buffer.vertex(transformationMatrix, (float) screenWidth / 2, (float) screenHeight / 2, 5).color(color.getRGB());
+                        buffer.vertex(transformationMatrix, (float) screenX + (float) size / 2, (float) screenY + (float) size / 2, 5).color(color.getRGB());
 
-                // Make sure the correct shader for your chosen vertex format is set!
-                // You can find all the shaders in the ShaderProgramKeys class.
-                RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+                        // Make sure the correct shader for your chosen vertex format is set!
+                        // You can find all the shaders in the ShaderProgramKeys class.
+                        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
+                        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-                // Draw the buffer onto the screen.
-                BufferRenderer.drawWithGlobalProgram(buffer.end());
+                        // Draw the buffer onto the screen.
+                        BufferRenderer.drawWithGlobalProgram(buffer.end());
+
+                        lineCount++;
+                    } catch (Exception e) {
+                        System.out.println("Failed to draw line: " + e.getMessage());
+                    }
+                }
             }
 
 
