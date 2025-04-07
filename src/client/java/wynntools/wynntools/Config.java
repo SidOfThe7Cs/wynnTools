@@ -1,8 +1,10 @@
 package wynntools.wynntools;
 
+import java.awt.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
@@ -27,11 +29,13 @@ public class Config {
 
     @SerialEntry private static boolean Outer_Void_Item_Helper_Main_Toggle = true;
     @SerialEntry private static Utils.Rarities Metal_Swarf_Color = Utils.Rarities.UNIQUE;
-    @SerialEntry private static Utils.Rarities Outer_Void_Show_Lines_Above_Rarity = Utils.Rarities.UNIQUE;
+    @SerialEntry private static Utils.Rarities Outer_Void_Show_Lines_At_Rarity = Utils.Rarities.RARE;
     @SerialEntry private static Utils.Rarities Outer_Void_Lowest_Rarity_To_Show = Utils.Rarities.RARE;
     @SerialEntry private static boolean Outer_Void_Show_Distance_Numbers = true;
-    @SerialEntry private static int Outer_Void_Item_Helper_Range = 300;
-    @SerialEntry private static int Outer_Void_Max_Lines_To_Draw = 20;
+    @SerialEntry private static int Outer_Void_Item_Helper_Range = 400;
+    @SerialEntry private static int Outer_Void_Max_Lines_To_Draw = 6;
+    @SerialEntry private static boolean Outer_Void_Next_Item_Unique_Color = false;
+    @SerialEntry private static Color Outer_Void_Next_Item_Color = Color.white;
 
     // getters and setters
     public static Utils.Rarities getMetal_Swarf_Color() {
@@ -42,12 +46,12 @@ public class Config {
         Metal_Swarf_Color = metal_Swarf_Color;
     }
 
-    public static Utils.Rarities getOuter_Void_Show_Lines_Above_Rarity() {
-        return Outer_Void_Show_Lines_Above_Rarity;
+    public static Utils.Rarities getOuter_Void_Show_Lines_At_Rarity() {
+        return Outer_Void_Show_Lines_At_Rarity;
     }
 
-    public static void setOuter_Void_Show_Lines_Above_Rarity(Utils.Rarities outer_Void_Show_Lines_Above_Rarity) {
-        Outer_Void_Show_Lines_Above_Rarity = outer_Void_Show_Lines_Above_Rarity;
+    public static void setOuter_Void_Show_Lines_At_Rarity(Utils.Rarities outer_Void_Show_Lines_At_Rarity) {
+        Outer_Void_Show_Lines_At_Rarity = outer_Void_Show_Lines_At_Rarity;
     }
 
     public static boolean isOuter_Void_Item_Helper_Main_Toggle() {
@@ -88,6 +92,22 @@ public class Config {
 
     public static void setOuter_Void_Max_Lines_To_Draw(int outer_Void_Max_Lines_To_Draw) {
         Outer_Void_Max_Lines_To_Draw = outer_Void_Max_Lines_To_Draw;
+    }
+
+    public static boolean isOuter_Void_Next_Item_Unique_Color() {
+        return Outer_Void_Next_Item_Unique_Color;
+    }
+
+    public static void setOuter_Void_Next_Item_Unique_Color(boolean outer_Void_Next_Item_Unique_Color) {
+        Outer_Void_Next_Item_Unique_Color = outer_Void_Next_Item_Unique_Color;
+    }
+
+    public static Color getOuter_Void_Next_Item_Color() {
+        return Outer_Void_Next_Item_Color;
+    }
+
+    public static void setOuter_Void_Next_Item_Color(Color outer_Void_Next_Item_Color) {
+        Outer_Void_Next_Item_Color = outer_Void_Next_Item_Color;
     }
 
     public enum Categories {
