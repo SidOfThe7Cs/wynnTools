@@ -164,9 +164,6 @@ public class OuterVoidItemDatabase {
         Pair Fossilized_Starfish2 = new Pair("Diamond Axe", 28.0F);
         itemRarityMap.put(Fossilized_Starfish2, Utils.Rarities.UNIQUE);
 
-        Pair Almanac_Page2 = new Pair("Diamond Axe", .0F); // still need dura here
-        itemRarityMap.put(Almanac_Page2, Utils.Rarities.RARE);
-
         Pair Elestial_Voidstone2 = new Pair("Diamond Axe", 66.0F);
         itemRarityMap.put(Elestial_Voidstone2, Utils.Rarities.RARE);
 
