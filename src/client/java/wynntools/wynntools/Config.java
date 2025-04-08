@@ -36,6 +36,7 @@ public class Config {
     @SerialEntry private static int Outer_Void_Max_Lines_To_Draw = 6;
     @SerialEntry private static boolean Outer_Void_Next_Item_Unique_Color = false;
     @SerialEntry private static Color Outer_Void_Next_Item_Color = Color.white;
+    @SerialEntry private static int Outer_Void_Max_Iten_Boxes_To_Show = 50;
 
     // getters and setters
     public static Utils.Rarities getMetal_Swarf_Color() {
@@ -108,6 +109,14 @@ public class Config {
 
     public static void setOuter_Void_Next_Item_Color(Color outer_Void_Next_Item_Color) {
         Outer_Void_Next_Item_Color = outer_Void_Next_Item_Color;
+    }
+
+    public static int getOuter_Void_Max_Iten_Boxes_To_Show() {
+        return Outer_Void_Max_Iten_Boxes_To_Show;
+    }
+
+    public static void setOuter_Void_Max_Iten_Boxes_To_Show(int outer_Void_Max_Iten_Boxes_To_Show) {
+        Outer_Void_Max_Iten_Boxes_To_Show = outer_Void_Max_Iten_Boxes_To_Show;
     }
 
     public enum Categories {

@@ -131,5 +131,13 @@ public class WynnToolsClient implements ClientModInitializer {
 				.controller(ColorControllerBuilder::create)
 				.build();
 		Config.addOption(Config.Categories.OUTER_VOID, option);
+
+		option = Option.<Integer>createBuilder()
+				.name(Text.of("the max number of item boxes to draw on the screen at once"))
+				.description(OptionDescription.of(Text.of("prioritizes rarity and then distance")))
+				.binding(50, Config::getOuter_Void_Max_Iten_Boxes_To_Show, Config::setOuter_Void_Max_Iten_Boxes_To_Show)
+				.controller(IntegerFieldControllerBuilder::create)
+				.build();
+		Config.addOption(Config.Categories.OUTER_VOID, option);
 	}
 }

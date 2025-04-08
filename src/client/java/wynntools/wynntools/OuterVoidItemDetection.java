@@ -142,7 +142,9 @@ public class OuterVoidItemDetection {
                 .toList();
 
         int lineCount = 0;
+        int boxCount = 0;
         for (Map.Entry<UUID, ItemEntity> entry : sortedItems) {
+            if (boxCount > Config.getOuter_Void_Max_Iten_Boxes_To_Show()) break;
             ItemEntity item = entry.getValue();
             Vec3d itemPos = item.getPos();
             if (!itemPos.isInRange(client.player.getPos(), Config.getOuter_Void_Item_Helper_Range())) continue;
@@ -211,6 +213,7 @@ public class OuterVoidItemDetection {
 
             context.fill((int) screenX - size / 2, (int) screenY - size / 2,
                     (int) screenX + size / 2, (int) screenY + size / 2, color.getRGB());
+            boxCount++;
 
 
             //draw line to items
