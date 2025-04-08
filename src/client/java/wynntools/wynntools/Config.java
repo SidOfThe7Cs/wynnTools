@@ -30,7 +30,7 @@ public class Config {
     @SerialEntry private static boolean Outer_Void_Item_Helper_Main_Toggle = true;
     @SerialEntry private static Utils.Rarities Metal_Swarf_Color = Utils.Rarities.UNIQUE;
     @SerialEntry private static Utils.Rarities Outer_Void_Show_Lines_At_Rarity = Utils.Rarities.RARE;
-    @SerialEntry private static Utils.Rarities Outer_Void_Lowest_Rarity_To_Show = Utils.Rarities.RARE;
+    @SerialEntry private static Utils.Rarities Outer_Void_Lowest_Rarity_To_Show = Utils.Rarities.UNIQUE;
     @SerialEntry private static boolean Outer_Void_Show_Distance_Numbers = true;
     @SerialEntry private static int Outer_Void_Item_Helper_Range = 400;
     @SerialEntry private static int Outer_Void_Max_Lines_To_Draw = 6;

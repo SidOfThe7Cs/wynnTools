@@ -80,9 +80,9 @@ public class WynnToolsClient implements ClientModInitializer {
 
 		option = Option.<Utils.Rarities>createBuilder()
 				.name(Text.of("Show items at rarity"))
-				.description(OptionDescription.of(Text.of("at what rarity should item boxes be shown")))
+				.description(OptionDescription.of(Text.of("WARNING: there seems to be a limited number of item spawn locations and items never despawn and do not go away when you relog if you ignore unique items forever nothing else wil spawn")))
 				.binding(
-						Utils.Rarities.RARE,
+						Utils.Rarities.UNIQUE,
 						Config::getOuter_Void_Lowest_Rarity_To_Show,
 						Config::setOuter_Void_Lowest_Rarity_To_Show
 				)
